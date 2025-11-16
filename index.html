@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Milton Moments – Smart Lunch Story Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0;}
+    #game-container { max-width: 400px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10);}
+    #scenario { font-size: 1.25em; margin-bottom: 15px;}
+    .option-btn { display: block; width: 100%; margin: 8px 0; padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px; cursor: pointer;}
+    .option-btn:hover { background: #1565c0; }
+    #result { font-weight: bold; margin-top: 20px; }
+    #freshness-points, #final-report { margin-top: 15px; }
+    #share-btn { background: #00d26a; margin-top: 10px;}
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h2>Milton Moments: Smart Lunch Story</h2>
+    <div id="scenario"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <div id="freshness-points"></div>
+    <div id="final-report"></div>
+    <button id="share-btn" style="display:none;">Share on Social Media</button>
+  </div>
+  <script>
+    // Game Data
+    const scenarios = [
+      {
+        scenario: "Student: Rushing to class, needs fast but healthy lunch.",
+        options: [
+          {answer: "Milton Microwavable Lunch Box", correct: true},
+          {answer: "Ordinary Plastic Box", correct: false},
+          {answer: "Aluminum Foil", correct: false}
+        ]
+      },
+      {
+        scenario: "Professional: Long meetings, needs meals to stay fresh.",
+        options: [
+          {answer: "Milton Vacuum Insulated Bottle", correct: true},
+          {answer: "Regular Glass Bottle", correct: false},
+          {answer: "Plastic Wrap", correct: false}
+        ]
+      },
+      {
+        scenario: "Parent: Packing lunch, wants to keep food warm for kids.",
+        options: [
+          {answer: "Milton Electric Tiffin", correct: true},
+          {answer: "Basic Steel Lunch Box", correct: false},
+          {answer: "Paper Bag", correct: false}
+        ]
+      },
+      {
+        scenario: "Traveler: On the move, needs a spill-proof bottle.",
+        options: [
+          {answer: "Milton Flip Lid Bottle", correct: true},
+          {answer: "Mug with Handle", correct: false},
+          {answer: "Open Cup", correct: false}
+        ]
+      }
+    ];
+    let step = 0, points = 0;
+
+    function showScenario() {
+      if (step < scenarios.length) {
+        document.getElementById('scenario').innerText = scenarios[step].scenario;
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        scenarios[step].options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerText = opt.answer;
+          btn.onclick = () => handleAnswer(opt.correct);
+          optionsDiv.appendChild(btn);
+        });
+        document.getElementById('result').innerText = '';
+      } else {
+        showReport();
+      }
+    }
+
+    function handleAnswer(correct) {
+      document.getElementById('result').innerText =
+        correct ? 'Great choice! You’ve earned Freshness Points!' : 'Try again next time!';
+      if (correct) points += 10;
+      document.getElementById('freshness-points').innerText = `Freshness Points: ${points}`;
+      step++;
+      setTimeout(showScenario, 1000);
+    }
+
+    function showReport() {
+      let report = "Your Smart Lunch Personality: ";
+      if (points >= 30) report += "Fresh Champion!";
+      else if (points >= 20) report += "Fresh Explorer!";
+      else report += "Fresh Starter!";
+      document.getElementById('final-report').innerText = report;
+      document.getElementById('share-btn').style.display = 'block';
+      document.getElementById('scenario').innerText = '';
+      document.getElementById('options').innerHTML = '';
+      document.getElementById('result').innerText = '';
+    }
+
+    document.getElementById('share-btn').onclick = function() {
+      const msg = encodeURIComponent(
+        "I played Milton Moments: Smart Lunch Story Game and scored " + points + " Freshness Points! #MiltonMoments"
+      );
+      window.open(`https://twitter.com/intent/tweet?text=${msg}`, '_blank');
+    };
+
+    showScenario();
+  </script>
+</body>
+</html>
