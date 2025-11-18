@@ -1,114 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Milton Moments – Smart Lunch Story Game</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0;}
-    #game-container { max-width: 400px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10);}
-    #scenario { font-size: 1.25em; margin-bottom: 15px;}
-    .option-btn { display: block; width: 100%; margin: 8px 0; padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px; cursor: pointer;}
-    .option-btn:hover { background: #1565c0; }
-    #result { font-weight: bold; margin-top: 20px; }
-    #freshness-points, #final-report { margin-top: 15px; }
-    #share-btn { background: #00d26a; margin-top: 10px;}
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Milton Moments – Smart Lunch Story Game</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f7;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        header img {
+            height: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);} 
+            to {opacity: 1; transform: translateY(0);} 
+        }
+
+        button {
+            background: #e31b23;
+            color: #fff;
+            border: none;
+            padding: 14px 26px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover { background: #b9151c; }
+
+        .choice-btn {
+            background: #fff;
+            color: #333;
+            border: 2px solid #e31b23;
+            padding: 12px 22px;
+            border-radius: 14px;
+            margin: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .choice-btn:hover {
+            background: #e31b23;
+            color: #fff;
+        }
+
+        .product-img {
+            width: 160px;
+            margin: 10px auto;
+        }
+
+        .hidden { display: none; }
+    </style>
 </head>
+
 <body>
-  <div id="game-container">
-    <h2>Milton Moments: Smart Lunch Story</h2>
-    <div id="scenario"></div>
-    <div id="options"></div>
-    <div id="result"></div>
-    <div id="freshness-points"></div>
-    <div id="final-report"></div>
-    <button id="share-btn" style="display:none;">Share on Social Media</button>
-  </div>
-  <script>
-    // Game Data
-    const scenarios = [
-      {
-        scenario: "Student: Rushing to class, needs fast but healthy lunch.",
-        options: [
-          {answer: "Milton Microwavable Lunch Box", correct: true},
-          {answer: "Ordinary Plastic Box", correct: false},
-          {answer: "Aluminum Foil", correct: false}
-        ]
-      },
-      {
-        scenario: "Professional: Long meetings, needs meals to stay fresh.",
-        options: [
-          {answer: "Milton Vacuum Insulated Bottle", correct: true},
-          {answer: "Regular Glass Bottle", correct: false},
-          {answer: "Plastic Wrap", correct: false}
-        ]
-      },
-      {
-        scenario: "Parent: Packing lunch, wants to keep food warm for kids.",
-        options: [
-          {answer: "Milton Electric Tiffin", correct: true},
-          {answer: "Basic Steel Lunch Box", correct: false},
-          {answer: "Paper Bag", correct: false}
-        ]
-      },
-      {
-        scenario: "Traveler: On the move, needs a spill-proof bottle.",
-        options: [
-          {answer: "Milton Flip Lid Bottle", correct: true},
-          {answer: "Mug with Handle", correct: false},
-          {answer: "Open Cup", correct: false}
-        ]
-      }
-    ];
-    let step = 0, points = 0;
+    <header>
+        <img src="milton-logo.png" alt="Milton Logo" />
+        <h2>Milton Moments</h2>
+    </header>
 
-    function showScenario() {
-      if (step < scenarios.length) {
-        document.getElementById('scenario').innerText = scenarios[step].scenario;
-        const optionsDiv = document.getElementById('options');
-        optionsDiv.innerHTML = '';
-        scenarios[step].options.forEach((opt, idx) => {
-          const btn = document.createElement('button');
-          btn.className = 'option-btn';
-          btn.innerText = opt.answer;
-          btn.onclick = () => handleAnswer(opt.correct);
-          optionsDiv.appendChild(btn);
-        });
-        document.getElementById('result').innerText = '';
-      } else {
-        showReport();
-      }
-    }
+    <div class="container">
+        <div id="intro" class="card">
+            <h1>Smart Lunch Story Game</h1>
+            <p>Step into real-life scenarios and choose the perfect Milton product to solve everyday problems. Earn Freshness Points as you play!</p>
+            <button onclick="startGame()">Start Game</button>
+        </div>
 
-    function handleAnswer(correct) {
-      document.getElementById('result').innerText =
-        correct ? 'Great choice! You’ve earned Freshness Points!' : 'Try again next time!';
-      if (correct) points += 10;
-      document.getElementById('freshness-points').innerText = `Freshness Points: ${points}`;
-      step++;
-      setTimeout(showScenario, 1000);
-    }
+        <div id="game" class="card hidden">
+            <h2 id="scenario-text"></h2>
+            <img id="product-preview" class="product-img hidden" />
+            <div id="choices"></div>
+        </div>
 
-    function showReport() {
-      let report = "Your Smart Lunch Personality: ";
-      if (points >= 30) report += "Fresh Champion!";
-      else if (points >= 20) report += "Fresh Explorer!";
-      else report += "Fresh Starter!";
-      document.getElementById('final-report').innerText = report;
-      document.getElementById('share-btn').style.display = 'block';
-      document.getElementById('scenario').innerText = '';
-      document.getElementById('options').innerHTML = '';
-      document.getElementById('result').innerText = '';
-    }
+        <div id="result" class="card hidden">
+            <h2>Your Smart Lunch Personality:</h2>
+            <h3 id="personality"></h3>
+            <p>You earned <b id="score"></b> Freshness Points!</p>
+            <button onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
 
-    document.getElementById('share-btn').onclick = function() {
-      const msg = encodeURIComponent(
-        "I played Milton Moments: Smart Lunch Story Game and scored " + points + " Freshness Points! #MiltonMoments"
-      );
-      window.open(`https://twitter.com/intent/tweet?text=${msg}`, '_blank');
-    };
 
-    showScenario();
-  </script>
+    <script>
+        const scenarios = [
+            {
+                text: "You're a student rushing to class and need your lunch to stay warm for hours.",
+                options: [
+                    { name: "Milton Thermosteel Flask", img: "thermosteel.png", points: 10 },
+                    { name: "Plastic Lunch Box", img: "lunchbox.png", points: 4 },
+                    { name: "Insulated Casserole", img: "casserole.png", points: 7 },
+                ]
+            },
+            {
+                text: "You are a busy professional and want your home‑cooked meal to stay fresh at work.",
+                options: [
+                    { name: "Microwaveable Lunch Box", img: "microwave.png", points: 7 },
+                    { name: "Milton Executive Lunch Set", img: "executive.png", points: 10 },
+                    { name: "Regular Steel Tiffin", img: "tiffin.png", points: 5 },
+                ]
+            },
+            {
+                text: "You're packing lunch for your kid and want it to stay both safe and fresh.",
+                options: [
+                    { name: "Kids Insulated Lunch Box", img: "kids.png", points: 10 },
+                    { name: "Generic Plastic Box", img: "normal.png", points: 3 },
+                    { name: "Thermosteel Bottle", img: "thermosteel.png", points: 5 },
+                ]
+            }
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        function startGame() {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
+            loadScenario();
+        }
+
+        function loadScenario() {
+            const s = scenarios[current];
+            document.getElementById('scenario-text').textContent = s.text;
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+
+            s.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = option.name;
+                btn.onclick = () => selectOption(option);
+                choicesDiv.appendChild(btn);
+            });
+        }
+
+        function selectOption(option) {
+            score += option.points;
+            current++;
+
+            if (current < scenarios.length) {
+                loadScenario();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('game').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('score').textContent = score;
+
+            let personality = "";
+            if (score >= 25) personality = "The Smart Planner";
+            else if (score >= 18) personality = "The Freshness Lover";
+            else personality = "The Quick Fixer";
+
+            document.getElementById('personality').textContent = personality;
+        }
+
+        function restartGame() {
+            current = 0;
+            score = 0;
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('intro').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
