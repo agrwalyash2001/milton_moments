@@ -1,204 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Milton Moments – Smart Lunch Story Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Milton Moments – Smart Lunch Story Game</title>
+  <meta name="description" content="Interactive Milton Moments game — choose products for characters, earn Freshness Points." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#e31b23; /* milton red */
+      --card-bg: #ffffff;
+      --muted:#6b6f76;
+      --glass: rgba(255,255,255,0.6);
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#f6f7fb 0%, #f2f4f8 100%);color:#222;display:flex;flex-direction:column;min-height:100vh;
+    }
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:rgba(255,255,255,0.8);backdrop-filter: blur(4px);box-shadow:0 6px 18px rgba(20,20,30,0.06);position:sticky;top:0;z-index:20}
+    header .brand{display:flex;align-items:center;gap:14px}
+    header img{height:48px;width:auto}
+    header h1{font-size:18px;margin:0;color:var(--accent)}
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    main{width:100%;max-width:var(--max-width);margin:28px auto;padding:0 18px;flex:1}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:start}
 
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #f5f5f7;
-            color: #333;
-        }
+    /* left column */
+    .card{background:var(--card-bg);border-radius:14px;padding:20px;box-shadow:0 10px 30px rgba(30,40,50,0.06);}
+    .intro h2{margin:6px 0 8px}
+    .intro p{color:var(--muted);line-height:1.5}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        header img {
-            height: 60px;
-        }
+    /* game area */
+    .scene{display:flex;flex-direction:column;gap:12px}
+    .scenario-box{display:flex;gap:16px;align-items:center}
+    .scenario-text{flex:1;text-align:left}
+    .product-visual{width:220px;min-height:140px;border-radius:12px;background:linear-gradient(180deg,#fff,#fafafa);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 6px 20px rgba(25,30,35,0.04);}
+    .product-visual img{max-width:100%;object-fit:contain;transform:translateY(0);transition:transform .45s cubic-bezier(.2,.9,.3,1)}
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            padding: 40px 20px;
-            text-align: center;
-        }
+    .choices{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+    .choice{flex:1 1 48%;min-width:160px;border-radius:12px;padding:12px;background:#fff;border:1px solid rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .18s ease, box-shadow .18s ease}
+    .choice:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(30,35,40,0.06)}
+    .choice img{width:58px;height:58px;object-fit:contain}
+    .choice .meta{flex:1}
+    .choice .meta b{display:block}
+    .choice small{color:var(--muted)}
 
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
-            margin-top: 25px;
-            animation: fadeIn 0.5s ease;
-        }
+    /* right column */
+    .sidebar{position:sticky;top:86px}
+    .score{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px}
+    .points{font-size:36px;color:var(--accent);font-weight:700}
+    .personality{background:linear-gradient(90deg,#fff,#fbfbfd);padding:12px;border-radius:10px;width:100%;text-align:center}
 
-        @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(10px);} 
-            to {opacity: 1; transform: translateY(0);} 
-        }
+    /* results */
+    .result-cta{display:flex;gap:10px;justify-content:center;margin-top:12px}
+    button.primary{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);padding:10px 14px;border-radius:12px;cursor:pointer}
 
-        button {
-            background: #e31b23;
-            color: #fff;
-            border: none;
-            padding: 14px 26px;
-            font-size: 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
-        }
-        button:hover { background: #b9151c; }
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
 
-        .choice-btn {
-            background: #fff;
-            color: #333;
-            border: 2px solid #e31b23;
-            padding: 12px 22px;
-            border-radius: 14px;
-            margin: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .choice-btn:hover {
-            background: #e31b23;
-            color: #fff;
-        }
+    /* animations */
+    .fade-in{animation:fadeIn .45s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-        .product-img {
-            width: 160px;
-            margin: 10px auto;
-        }
-
-        .hidden { display: none; }
-    </style>
+    /* mobile */
+    @media (max-width:920px){
+      .grid{grid-template-columns:1fr;}
+      .product-visual{width:160px}
+      header img{height:44px}
+      .choices .choice{flex-basis:100%}
+      .sidebar{position:static}
+    }
+  </style>
 </head>
-
 <body>
-    <header>
-        <img src="milton-logo.png" alt="Milton Logo" />
-        <h2>Milton Moments</h2>
-    </header>
-
-    <div class="container">
-        <div id="intro" class="card">
-            <h1>Smart Lunch Story Game</h1>
-            <p>Step into real-life scenarios and choose the perfect Milton product to solve everyday problems. Earn Freshness Points as you play!</p>
-            <button onclick="startGame()">Start Game</button>
-        </div>
-
-        <div id="game" class="card hidden">
-            <h2 id="scenario-text"></h2>
-            <img id="product-preview" class="product-img hidden" />
-            <div id="choices"></div>
-        </div>
-
-        <div id="result" class="card hidden">
-            <h2>Your Smart Lunch Personality:</h2>
-            <h3 id="personality"></h3>
-            <p>You earned <b id="score"></b> Freshness Points!</p>
-            <button onclick="restartGame()">Play Again</button>
-        </div>
+  <header>
+    <div class="brand">
+      <!-- Milton logo from official assets (replace if you have a high-res file) -->
+      <img src="https://images.openai.com/static-rsc-1/yla7GtiH4Ys7jeB2LmmnX-cz8G7ce4S8x2v6zJx0yKUmdAOJBokZJymlRqHHGtpQ4k32pyZrvNRzFBP9WyHwnhhMPzZUwHgYJxbnIfFstu34Ij_kF7PzuNNrH6qlw8FDS3KHJA01YkJ-OE9rpmH7Qg" alt="Milton logo">
+      <h1>Milton Moments</h1>
     </div>
+    <div class="hdr-actions">
+      <button class="ghost" id="shareBtn">Share</button>
+      <button class="primary" id="startBtn">Start Game</button>
+    </div>
+  </header>
 
+  <main>
+    <div class="grid">
+      <section class="card intro">
+        <h2 class="fade-in">Smart Lunch Story — now with more Milton products</h2>
+        <p class="fade-in">Play as different characters (student, teacher, traveler, businessperson and more). Choose the best Milton product — not just tiffins but bottles, carafes, casseroles and flasks — to earn Freshness Points. Built with animations, responsive layout and sound feedback.</p>
 
-    <script>
-        const scenarios = [
-            {
-                text: "You're a student rushing to class and need your lunch to stay warm for hours.",
-                options: [
-                    { name: "Milton Thermosteel Flask", img: "thermosteel.png", points: 10 },
-                    { name: "Plastic Lunch Box", img: "lunchbox.png", points: 4 },
-                    { name: "Insulated Casserole", img: "casserole.png", points: 7 },
-                ]
-            },
-            {
-                text: "You are a busy professional and want your home‑cooked meal to stay fresh at work.",
-                options: [
-                    { name: "Microwaveable Lunch Box", img: "microwave.png", points: 7 },
-                    { name: "Milton Executive Lunch Set", img: "executive.png", points: 10 },
-                    { name: "Regular Steel Tiffin", img: "tiffin.png", points: 5 },
-                ]
-            },
-            {
-                text: "You're packing lunch for your kid and want it to stay both safe and fresh.",
-                options: [
-                    { name: "Kids Insulated Lunch Box", img: "kids.png", points: 10 },
-                    { name: "Generic Plastic Box", img: "normal.png", points: 3 },
-                    { name: "Thermosteel Bottle", img: "thermosteel.png", points: 5 },
-                ]
-            }
-        ];
+        <div id="gameArea" class="scene fade-in" aria-live="polite">
+          <!-- Scenario container populated by JS -->
+          <div id="scenario" class="scenario-box">
+            <div class="scenario-text">
+              <h3 id="scenarioTitle">Click <b>Start Game</b> to begin</h3>
+              <p id="scenarioDesc" style="color:var(--muted)"></p>
+              <div class="choices" id="choices"></div>
+            </div>
+            <div class="product-visual" id="visual">
+              <img id="visualImg" src="" alt="product" />
+            </div>
+          </div>
+        </div>
 
-        let current = 0;
-        let score = 0;
+        <div id="resultCard" class="card hidden" style="margin-top:14px">
+          <h3>Result</h3>
+          <p id="resultSummary"></p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+            <button class="primary" id="replayBtn">Play Again</button>
+            <button class="ghost" id="downloadBtn">Get Coupon</button>
+          </div>
+        </div>
+      </section>
 
-        function startGame() {
-            document.getElementById('intro').classList.add('hidden');
-            document.getElementById('game').classList.remove('hidden');
-            loadScenario();
-        }
+      <aside class="card sidebar">
+        <div class="score">
+          <div style="font-size:13px;color:var(--muted)">Freshness Points</div>
+          <div class="points" id="points">0</div>
+          <div class="personality" id="personality">Your Smart Lunch Personality: <br><b id="ptype">—</b></div>
+        </div>
 
-        function loadScenario() {
-            const s = scenarios[current];
-            document.getElementById('scenario-text').textContent = s.text;
+        <div style="padding:12px;color:var(--muted)">
+          <div style="font-weight:600;margin-bottom:8px">How scoring works</div>
+          <ul style="padding-left:18px;margin:0;color:var(--muted);font-size:14px">
+            <li>Best match: +10 pts</li>
+            <li>Good match: +6 pts</li>
+            <li>Acceptable: +3 pts</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
 
-            const choicesDiv = document.getElementById('choices');
-            choicesDiv.innerHTML = '';
+  <footer>
+    Built for Milton Moments — choose wisely, share with #MiltonMoments
+  </footer>
 
-            s.options.forEach(option => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = option.name;
-                btn.onclick = () => selectOption(option);
-                choicesDiv.appendChild(btn);
-            });
-        }
+  <script>
+    // ---------- Product images (sourced from Milton / retail) ----------
+    const IMAGES = {
+      proLunch: 'https://images.openai.com/static-rsc-1/mPVNbio4RoWX844BDdYfnReMLL9JlETRjt63HUfrPlM24UVSx_yjeqZ0Kl-2_wxVrj6u8uXF1NM4BGPRM5ans3wG9_d-bKsochIjbkuiVA5Xhx3r7abeNAMuP_5wy4_W1Qbmi8riC4vJAof6toAUeA',
+      steelOn: 'https://images.openai.com/static-rsc-1/Xig86_5BuTLRQxhI4BH2Ss8b-pZQJlKPVRqqOrFRfI-OvwmNTO58QSFHUaUJnUBwCA8FPMniUfivjeviGnim8VIk1qRahgxC7IjaYqSYw9mimbaGEW2N0r9DQ0WH-fRdhplxiTTZoc1ZqFzkdaPcRA',
+      treoGlass: 'https://images.openai.com/static-rsc-1/jvcWROYi7vzPluuwtfTBBHohypc2SJY3dN7W8ksi7ZGOeMqVYnxlBXGOgS-TxO4jDnWOOvLFVMybYymvJBHbnUYXC7yHkHU3E2s2v6dCujHt0HE44_4B-y5WrA8oVUf7tB7WFcK05RP6SjVlKKh4TA',
+      thermosteel500: 'https://images.openai.com/static-rsc-1/LtM7Irdh3ClsWliw6z2V_mLloLdqWGnYBqwDbyRaKgDXw3RU-D6pL2B9kiH5L3qY8NMKw4pZ2BeOJiV4Y1eKS2y9WTp_XdrtVIHVtC-22GWOGyjJVMX23FePv3imNR4QkglF_tc1HBJfWEx-8j-LwQ',
+      carafe: 'https://images.openai.com/static-rsc-1/0qF-LCKfhxEJWmPL_9ExeAPYKiT0xnqV71-2LwjJTBBosd2mL6h-J9ED_mWbguebnYYdhZPai6tHaCVjwV4FBI6D_MmWMO2TuIkhjdW_e6p5J-e9YOLNr4SSByFniSGq2oERvLr2TpRb2SOJyPiR_g'
+    };
 
-        function selectOption(option) {
-            score += option.points;
-            current++;
+    // ---------- Scenarios (including many product types) ----------
+    const scenarios = [
+      {
+        id:'student_college',
+        title:'Riya the College Student — needs a durable, multi-compartment lunch for long campus hours',
+        description:'Riya wants her food to stay fresh and not leak in her backpack. She needs a set that fits different dishes and a bottle.',
+        options:[
+          {name:'Milton Pro Lunch Set (multi-compartment + bottle)',img:IMAGES.proLunch,score:10,desc:'Best for multi-dish meals & insulation.'},
+          {name:'Thermosteel 500ml Flask (drink only)',img:IMAGES.thermosteel500,score:4,desc:'Keeps drinks hot/cold, but not a full lunch.'},
+          {name:'Glass Treo (microwave friendly)',img:IMAGES.treoGlass,score:6,desc:'Healthy glass containers, good for microwave.'}
+        ]
+      },
+      {
+        id:'teacher',
+        title:'Mr. Khanna the Teacher — serves snacks, shares food, needs volume',
+        description:'Often shares food in the staff room and prefers something with capacity and durability.',
+        options:[
+          {name:'Senior Flatmate / Large Tiffin',img:IMAGES.steelOn,score:8,desc:'Higher capacity for sharing.'},
+          {name:'Thermosteel Carafe (serve tea/coffee)',img:IMAGES.carafe,score:10,desc:'Great for serving hot drinks to a group.'},
+          {name:'Pro Lunch Set',img:IMAGES.proLunch,score:5,desc:'Good but smaller than a dedicated large tiffin.'}
+        ]
+      },
+      {
+        id:'business_traveler',
+        title:'Vikram the Business Traveler — meetings, client lunches, wants professional gear',
+        description:'Looks for stylish, insulated solutions that keep food & drinks at the right temp during travel.',
+        options:[
+          {name:'Milton Savor / Executive Lunch Set',img:IMAGES.proLunch,score:9,desc:'Looks professional and keeps food fresh.'},
+          {name:'Thermosteel Flask 500ml',img:IMAGES.thermosteel500,score:8,desc:'Keeps coffee hot between meetings.'},
+          {name:'Insulated Casserole (for offsite serving)',img:IMAGES.carafe,score:6,desc:'Great when serving at client sites.'}
+        ]
+      },
+      {
+        id:'traveler',
+        title:'Sara the Traveler — road trips and picnics',
+        description:'Needs strong insulation and durability for bumpy journeys.',
+        options:[
+          {name:'Insulated Casserole + Carafe combo',img:IMAGES.carafe,score:10,desc:'Food stays hot and drinks stay ready.'},
+          {name:'Thermosteel 500ml Flask',img:IMAGES.thermosteel500,score:7,desc:'Handy for solo hot drinks.'},
+          {name:'Glass Treo set',img:IMAGES.treoGlass,score:5,desc:'Fragile for rough travel but healthy for short trips.'}
+        ]
+      },
+      {
+        id:'gym_goer',
+        title:'Aditya the Gym-Goer — hydration and protein post-workout',
+        description:'Wants a cold bottle for shakes and a separate safe container for meals.',
+        options:[
+          {name:'Thermosteel Duo Bottle',img:IMAGES.thermosteel500,score:8,desc:'Keeps shakes cold or drinks hot post-workout.'},
+          {name:'Treo Glass (meal)',img:IMAGES.treoGlass,score:6,desc:'Healthy meal container for proteins.'},
+          {name:'Pro Lunch Set',img:IMAGES.proLunch,score:5,desc:'More than needed but functional.'}
+        ]
+      }
+    ];
 
-            if (current < scenarios.length) {
-                loadScenario();
-            } else {
-                endGame();
-            }
-        }
+    // ---------- Game state ----------
+    let idx = 0; let totalScore = 0;
 
-        function endGame() {
-            document.getElementById('game').classList.add('hidden');
-            document.getElementById('result').classList.remove('hidden');
-            document.getElementById('score').textContent = score;
+    // DOM refs
+    const startBtn = document.getElementById('startBtn');
+    const choicesWrap = document.getElementById('choices');
+    const scenarioTitle = document.getElementById('scenarioTitle');
+    const scenarioDesc = document.getElementById('scenarioDesc');
+    const visualImg = document.getElementById('visualImg');
+    const pointsEl = document.getElementById('points');
+    const ptypeEl = document.getElementById('ptype');
+    const resultCard = document.getElementById('resultCard');
+    const resultSummary = document.getElementById('resultSummary');
+    const replayBtn = document.getElementById('replayBtn');
 
-            let personality = "";
-            if (score >= 25) personality = "The Smart Planner";
-            else if (score >= 18) personality = "The Freshness Lover";
-            else personality = "The Quick Fixer";
+    // ---------- Audio feedback using Web Audio API ----------
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioCtx();
+    function playTone(freq=440,duration=0.06, type='sine'){
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.12,audioCtx.currentTime+0.01);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+duration);
+      o.stop(audioCtx.currentTime+duration+0.02);
+    }
+    function clickSound(){ playTone(680,0.05); }
+    function successSound(){ playTone(880,0.07,'square'); setTimeout(()=>playTone(1320,0.05,'sine'),80); }
 
-            document.getElementById('personality').textContent = personality;
-        }
+    // ---------- Utility: animate counter ----------
+    function animatePoints(from,to){
+      const start = performance.now();
+      const dur = 600;
+      function step(now){
+        const t = Math.min(1,(now-start)/dur);
+        const val = Math.round(from + (to-from)*t);
+        pointsEl.textContent = val;
+        if(t<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
 
-        function restartGame() {
-            current = 0;
-            score = 0;
-            document.getElementById('result').classList.add('hidden');
-            document.getElementById('intro').classList.remove('hidden');
-        }
-    </script>
+    // ---------- Load scenario ----------
+    function loadScenario(i){
+      const s = scenarios[i];
+      scenarioTitle.textContent = s.title;
+      scenarioDesc.textContent = s.description;
+      visualImg.src = s.options[0].img; visualImg.alt = s.options[0].name;
+      // populate choices
+      choicesWrap.innerHTML = '';
+      s.options.forEach((opt, k) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice fade-in';
+        btn.innerHTML = `\n          <img src="${opt.img}" alt="${opt.name}">\n          <div class=\"meta\">\n            <b>${opt.name}</b>\n            <small>${opt.desc}</small>\n          </div>`;
+        btn.onclick = () => selectOption(opt, btn);
+        btn.onmouseover = () => { visualImg.src = opt.img; }; // show selected product image on hover
+        choicesWrap.appendChild(btn);
+      });
+    }
+
+    function selectOption(opt,el){
+      clickSound();
+      // visual pop
+      el.animate([{transform:'scale(1)'},{transform:'scale(0.98)'},{transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.9,.3,1)'});
+
+      // update score and progress
+      const old = totalScore; totalScore += opt.score; animatePoints(old,totalScore);
+
+      // short feedback
+      setTimeout(()=>{ successSound(); },150);
+
+      // next
+      idx++;
+      if(idx < scenarios.length){
+        setTimeout(()=>loadScenario(idx),420);
+      } else {
+        setTimeout(()=>endGame(),420);
+      }
+    }
+
+    function endGame(){
+      // personality logic
+      let p='Quick Fixer';
+      if(totalScore>=45) p='The Smart Planner';
+      else if(totalScore>=30) p='The Freshness Lover';
+      else if(totalScore>=20) p='The Practical Chooser';
+      ptypeEl.textContent = p;
+
+      // result summary
+      resultSummary.textContent = `You scored ${totalScore} Freshness Points across ${scenarios.length} scenarios. Your profile: ${p}. Share your result with #MiltonMoments!`;
+      resultCard.classList.remove('hidden');
+      successSound();
+    }
+
+    function resetGame(){ idx=0; totalScore=0; animatePoints(0,0); ptypeEl.textContent='—'; resultCard.classList.add('hidden'); loadScenario(0); }
+
+    // ---------- UI bindings ----------
+    startBtn.addEventListener('click',()=>{
+      // resume audio context on user gesture (required by some browsers)
+      if(audioCtx.state==='suspended') audioCtx.resume();
+      resetGame();
+      playTone(540,0.05);
+    });
+    replayBtn.addEventListener('click',()=>{ clickSound(); resetGame(); });
+
+    document.getElementById('shareBtn').addEventListener('click',()=>{
+      clickSound();
+      alert('Share feature — copy this result and post with #MiltonMoments!');
+    });
+
+    // preload images
+    Object.values(IMAGES).forEach(u=>{ const i=new Image(); i.src=u; });
+
+    // start with first scenario loaded invisibly
+    loadScenario(0);
+
+    // Accessibility: keyboard navigation for choices
+    document.addEventListener('keydown',(e)=>{
+      if(e.key === 'Enter' && document.activeElement && document.activeElement.classList.contains('choice')){
+        document.activeElement.click();
+      }
+    });
+  </script>
+
 </body>
 </html>
