@@ -1,63 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Milton Moments – Smart Lunch Story Game</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Milton Moments — Smart Lunch Story Game</title>
+  <meta name="description" content="Milton Moments — interactive product-match game. Choose products for characters, earn Freshness Points and get a coupon." />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <img src="images/milton-logo.png" alt="Milton logo" />
-      <h1>Milton Moments</h1>
+  <!-- Preloader -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-inner">
+      <img src="images/milton-logo.png" alt="Milton"/>
+      <div class="loader-bar"><span></span></div>
+      <div class="loading-text">Warming up Milton Moments...</div>
     </div>
-    <div class="hdr-actions">
-      <button class="ghost" id="shareBtn">Share</button>
-      <button class="primary" id="startBtn">Start Game</button>
+  </div>
+
+  <!-- Landing / Hero -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <img src="images/milton-logo.png" alt="Milton logo" />
+        <div>
+          <h1>Milton Moments</h1>
+          <p class="tag">The Smart Lunch Story Game — choose right, earn points, get rewards.</p>
+        </div>
+      </div>
+      <nav class="nav-actions">
+        <button id="howBtn" class="ghost">How it works</button>
+        <button id="startBtnHero" class="primary">Play Now</button>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <div class="grid">
-      <section class="card intro">
-        <h2 class="fade-in">Smart Lunch Story — now with more Milton products</h2>
-        <p class="fade-in">Play as different characters and choose the best Milton product — bottles, carafes, casseroles and flasks — to earn Freshness Points.</p>
+  <main class="main-wrap">
+    <section class="panel game-panel card" id="gamePanel">
+      <div class="grid">
+        <div class="left">
+          <div class="intro">
+            <h2 id="scenarioTitle">Welcome to Milton Moments</h2>
+            <p id="scenarioDesc">Play as different characters — students, teachers, travelers, professionals, gym-goers and more. Choose Milton products (bottles, flasks, carafes, casseroles and tiffins) that best solve each scenario.</p>
+          </div>
 
-        <div id="gameArea" class="scene fade-in" aria-live="polite">
-          <div id="scenario" class="scenario-box">
-            <div class="scenario-text">
-              <h3 id="scenarioTitle">Click <b>Start Game</b> to begin</h3>
-              <p id="scenarioDesc"></p>
-              <div class="choices" id="choices"></div>
-            </div>
-            <div class="product-visual" id="visual">
-              <img id="visualImg" src="" alt="product" />
-            </div>
+          <div id="choices" class="choices"></div>
+
+          <div id="navButtons" class="nav-buttons">
+            <button id="prevBtn" class="ghost">Previous</button>
+            <button id="nextBtn" class="primary">Next</button>
           </div>
         </div>
 
-        <div id="resultCard" class="card hidden">
-          <h3>Result</h3>
-          <p id="resultSummary"></p>
-          <div class="result-cta">
-            <button class="primary" id="replayBtn">Play Again</button>
-            <button class="ghost" id="downloadBtn">Get Coupon</button>
+        <aside class="right">
+          <div class="visual card product-visual">
+            <img id="visualImg" src="images/pro_lunch.png" alt="product preview"/>
           </div>
-        </div>
-      </section>
 
-      <aside class="card sidebar">
-        <div class="score">
-          <div>Freshness Points</div>
-          <div class="points" id="points">0</div>
-          <div class="personality">Your Smart Lunch Personality:<br><b id="ptype">—</b></div>
+          <div class="score card">
+            <div class="score-label">Freshness Points</div>
+            <div class="points" id="points">0</div>
+            <div class="personality">Profile: <b id="ptype">—</b></div>
+            <div class="small">Best matches earn more points.</div>
+            <button id="couponBtn" class="primary" style="margin-top:10px">Get Coupon</button>
+          </div>
+
+          <div class="audio card">
+            <div>Sound: <label class="switch"><input id="soundToggle" type="checkbox" checked><span class="slider"></span></label></div>
+            <div style="margin-top:10px"><button id="muteBtn" class="ghost">Play Ambient</button></div>
+          </div>
+        </aside>
+      </div>
+
+      <div id="resultCard" class="card result hidden">
+        <h3>Your Result</h3>
+        <p id="resultSummary"></p>
+        <div class="result-actions">
+          <button id="replayBtn" class="primary">Play Again</button>
+          <button id="shareBtn" class="ghost">Share</button>
         </div>
-      </aside>
-    </div>
+      </div>
+    </section>
+
+    <section class="panel features">
+      <h3>Why Milton Moments?</h3>
+      <div class="feature-grid">
+        <div class="feature card">
+          <h4>Real Milton Products</h4>
+          <p>Not just tiffins — bottles, carafes, casseroles, flasks, and more to match everyday life.</p>
+        </div>
+        <div class="feature card">
+          <h4>Fun & Rewarding</h4>
+          <p>Earn Freshness Points and get a discount coupon at the end.</p>
+        </div>
+        <div class="feature card">
+          <h4>Shareable</h4>
+          <p>Share your Smart Lunch Personality on social media.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel how card" id="how">
+      <h3>How It Works</h3>
+      <ol>
+        <li>Start the game and select a character scenario.</li>
+        <li>Pick the Milton product you think solves the problem best.</li>
+        <li>Earn Freshness Points — higher for better matches.</li>
+        <li>At the end, claim a coupon that you'll receive from our backend.</li>
+      </ol>
+    </section>
   </main>
 
-  <footer>Built for Milton Moments — Share with #MiltonMoments</footer>
+  <footer class="site-footer">
+    <div>© Milton Moments — Built for demo. Replace images with official Milton assets before publishing.</div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
