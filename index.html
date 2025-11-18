@@ -3,72 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Milton Moments — Freshness Game</title>
+  <title>Milton Moments – Smart Lunch Story Game</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Landing Section -->
-  <section class="landing">
+  <!-- Tiny Preloader (controlled by JS) -->
+  <div id="preloader" class="preloader hidden" aria-hidden="true">
+    <div class="loader" role="status" aria-label="Loading Milton Moments">
+      <img src="images/milton-logo.png" alt="Milton Logo" class="loader-logo" />
+      <div class="loader-dots">
+        <span class="dot"></span>
+        <span class="dot" style="animation-delay:0.12s"></span>
+        <span class="dot" style="animation-delay:0.24s"></span>
+      </div>
+      <p class="loader-text">Warming up your Milton Moments…</p>
+    </div>
+  </div>
+
+  <!-- Landing / Home -->
+  <section class="landing" aria-labelledby="landing-title">
     <div class="landing-content">
-      <img src="images/milton-logo.png" class="logo" alt="Milton Logo" />
-      <h1 class="title">Milton Moments</h1>
-      <p class="subtitle">Discover your freshness personality through smart choices</p>
+      <div class="landing-head">
+        <img src="images/milton-logo.png" alt="Milton Logo" class="logo" />
+        <h1 id="landing-title" class="title">Milton Moments</h1>
+        <p class="subtitle">
+          Discover your Smart Lunch Personality by matching Milton products to real-life moments.
+        </p>
+      </div>
 
       <div class="card-section">
-        <div class="info-card">
-          <h2>Why Milton Moments?</h2>
+        <article class="info-card" aria-labelledby="why-heading">
+          <h2 id="why-heading">Why Milton Moments?</h2>
           <p>
-            Milton Moments is an interactive experience that shows how everyday products—
-            from bottles and tiffins to casseroles and Thermosteel—fit into real-life
-            moments. Your choices reveal your freshness style.
+            Milton Moments turns everyday situations into playful choices. From students and
+            teachers to travelers and gym-goers, see how Milton bottles, tiffins, casseroles
+            and Thermosteel products fit into each lifestyle.
           </p>
-        </div>
+        </article>
 
-        <div class="info-card">
-          <h2>How It Works?</h2>
+        <article class="info-card" aria-labelledby="how-heading">
+          <h2 id="how-heading">How It Works</h2>
           <ol>
-            <li>Select the perfect Milton product for each lifestyle scenario.</li>
-            <li>Earn Freshness Points for smart choices.</li>
-            <li>Reveal your Freshness Personality.</li>
-            <li>Unlock a special reward coupon.</li>
+            <li>Read each character’s scenario.</li>
+            <li>Pick the Milton product that fits best.</li>
+            <li>Earn Freshness Points for smart picks.</li>
+            <li>Unlock your Freshness Personality & get a coupon.</li>
           </ol>
-        </div>
+        </article>
       </div>
 
-      <button id="startGameBtn" class="start-btn">Start Game</button>
+      <button id="startGameBtn" class="start-btn" type="button">
+        Start Game
+      </button>
     </div>
   </section>
 
-  <!-- Game Section (hidden until start) -->
-  <section id="gamePanel" class="game hidden">
+  <!-- Game Section (hidden by default) -->
+  <section id="gamePanel" class="game hidden" aria-live="polite">
     <div class="game-container">
-
-      <div class="scenario">
+      <!-- Left: Scenario & choices -->
+      <section class="scenario" aria-label="Scenario">
         <h2 id="scenarioTitle">Scenario Title</h2>
-        <p id="scenarioDesc">Scenario Description</p>
+        <p id="scenarioDesc" class="scenario-desc">Scenario description appears here.</p>
 
-        <div class="choices" id="choices"></div>
-      </div>
-
-      <div class="preview">
-        <img id="visualImg" src="" alt="Product Preview" />
-
-        <div class="score-box">
-          <h3>Freshness Points</h3>
-          <div id="points" class="points">0</div>
-          <p class="personality">Profile: <span id="ptype">—</span></p>
-          <button id="couponBtn" class="coupon-btn">Get Coupon</button>
+        <div id="choices" class="choices" role="list">
+          <!-- Choice buttons injected by script.js -->
         </div>
-      </div>
+      </section>
 
-      <div id="resultCard" class="result hidden">
-        <h3>Your Result</h3>
-        <p id="resultSummary"></p>
-        <button id="replayBtn" class="start-btn">Play Again</button>
-      </div>
+      <!-- Right: preview & score -->
+      <aside class="preview" aria-label="Product preview and score">
+        <figure class="product-visual">
+          <img
+            id="visualImg"
+            src=""
+            alt="Selected Milton product preview"
+            loading="lazy"
+          />
+          <figcaption id="visualCaption" class="visual-caption"></figcaption>
+        </figure>
 
+        <div class="score-box" aria-label="Score panel">
+          <h3 class="score-label">Freshness Points</h3>
+          <div id="points" class="points">0</div>
+          <p class="personality">
+            Profile:
+            <span id="ptype">—</span>
+          </p>
+
+          <div class="score-actions">
+            <button id="couponBtn" class="coupon-btn" type="button">
+              Get Coupon
+            </button>
+            <button id="shareBtn" class="ghost-btn" type="button">
+              Share Result
+            </button>
+          </div>
+        </div>
+      </aside>
     </div>
+
+    <!-- Result summary -->
+    <section id="resultCard" class="result hidden" aria-label="Result summary">
+      <h3>Your Milton Moments Result</h3>
+      <p id="resultSummary"></p>
+      <button id="replayBtn" class="start-btn secondary" type="button">
+        Play Again
+      </button>
+    </section>
   </section>
+
+  <footer class="site-footer">
+    Built for Milton Moments – demo experience. Replace images with official Milton assets
+    before production.
+  </footer>
 
   <script src="script.js"></script>
 </body>
