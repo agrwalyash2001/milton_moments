@@ -59,8 +59,8 @@
 
   <!-- Game Panel -->
   <section id="gamePanel" class="game hidden">
-    <div class="game-container">
-
+    <!-- Game content wrapper (we hide this at the end) -->
+    <div class="game-container" id="gameContainer">
       <!-- Scenario -->
       <section class="scenario">
         <h2 id="scenarioTitle">Scenario Title</h2>
@@ -69,7 +69,7 @@
         <div id="choices" class="choices"></div>
       </section>
 
-      <!-- Preview + Score -->
+      <!-- Preview + Score (inline HUD during game) -->
       <aside class="preview">
         <figure class="product-visual">
           <img id="visualImg" src="" alt="Product preview" />
@@ -82,21 +82,46 @@
           <p class="personality">
             Profile: <span id="ptype">—</span>
           </p>
-
-          <button id="couponBtn" class="coupon-btn">Get Coupon</button>
-          <button id="shareBtn" class="ghost-btn">Share Result</button>
         </div>
       </aside>
-
     </div>
 
-    <!-- Results -->
+    <!-- Result Card (full-width, social-ready) -->
     <section id="resultCard" class="result hidden">
-      <h3>Your Milton Moments Result</h3>
-      <p id="resultSummary"></p>
-      <button id="replayBtn" class="start-btn secondary">Play Again</button>
-    </section>
+      <div class="result-card-inner">
+        <img src="images/milton-logo.png" alt="Milton Logo" class="result-logo" />
+        <h3 class="result-title">My Milton Moments Report</h3>
 
+        <p class="result-score">
+          Freshness Points:
+          <span id="finalScore">0</span>
+        </p>
+
+        <p class="result-profile">
+          Smart Lunch Personality:
+          <span id="finalProfile">—</span>
+        </p>
+
+        <p class="result-tagline">
+          “I pack every day with smart, fresh choices – powered by Milton.”
+        </p>
+
+        <p class="result-copy" id="resultCopy">
+          From campus sprints to chai breaks and road trips, my Milton moments stay fresh,
+          convenient and ready to share.
+        </p>
+
+        <p class="result-hashtags">
+          #MiltonMoments • #SmartLunch • #StayFreshWithMilton
+        </p>
+
+        <div class="result-actions">
+          <button id="resultPlayAgain" class="start-btn secondary">Play Again</button>
+          <button id="shareBtn" class="ghost-btn">Share Result</button>
+          <button id="couponBtn" class="coupon-btn">Get Coupon</button>
+        </div>
+      </div>
+    </section>
   </section>
 
   <footer class="site-footer">
