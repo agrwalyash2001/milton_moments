@@ -7,9 +7,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Tiny Preloader (controlled by JS) -->
-  <div id="preloader" class="preloader hidden" aria-hidden="true">
-    <div class="loader" role="status" aria-label="Loading Milton Moments">
+
+  <!-- Preloader -->
+  <div id="preloader" class="preloader hidden">
+    <div class="loader">
       <img src="images/milton-logo.png" alt="Milton Logo" class="loader-logo" />
       <div class="loader-dots">
         <span class="dot"></span>
@@ -20,102 +21,86 @@
     </div>
   </div>
 
-  <!-- Landing / Home -->
-  <section class="landing" aria-labelledby="landing-title">
+  <!-- Landing Page -->
+  <section class="landing">
     <div class="landing-content">
       <div class="landing-head">
         <img src="images/milton-logo.png" alt="Milton Logo" class="logo" />
-        <h1 id="landing-title" class="title">Milton Moments</h1>
+        <h1 class="title">Milton Moments</h1>
         <p class="subtitle">
           Discover your Smart Lunch Personality by matching Milton products to real-life moments.
         </p>
       </div>
 
       <div class="card-section">
-        <article class="info-card" aria-labelledby="why-heading">
-          <h2 id="why-heading">Why Milton Moments?</h2>
+        <article class="info-card">
+          <h2>Why Milton Moments?</h2>
           <p>
             Milton Moments turns everyday situations into playful choices. From students and
-            teachers to travelers and gym-goers, see how Milton bottles, tiffins, casseroles
-            and Thermosteel products fit into each lifestyle.
+            teachers to travelers and gym-goers—see how Milton bottles, tiffins,
+            casseroles and Thermosteel products fit into their lives.
           </p>
         </article>
 
-        <article class="info-card" aria-labelledby="how-heading">
-          <h2 id="how-heading">How It Works</h2>
+        <article class="info-card">
+          <h2>How It Works</h2>
           <ol>
-            <li>Read each character’s scenario.</li>
+            <li>Read each scenario.</li>
             <li>Pick the Milton product that fits best.</li>
             <li>Earn Freshness Points for smart picks.</li>
-            <li>Unlock your Freshness Personality & get a coupon.</li>
+            <li>Unlock your Personality & get a coupon.</li>
           </ol>
         </article>
       </div>
 
-      <button id="startGameBtn" class="start-btn" type="button">
-        Start Game
-      </button>
+      <button id="startGameBtn" class="start-btn">Start Game</button>
     </div>
   </section>
 
-  <!-- Game Section (hidden by default) -->
-  <section id="gamePanel" class="game hidden" aria-live="polite">
+  <!-- Game Panel -->
+  <section id="gamePanel" class="game hidden">
     <div class="game-container">
-      <!-- Left: Scenario & choices -->
-      <section class="scenario" aria-label="Scenario">
-        <h2 id="scenarioTitle">Scenario Title</h2>
-        <p id="scenarioDesc" class="scenario-desc">Scenario description appears here.</p>
 
-        <div id="choices" class="choices" role="list">
-          <!-- Choice buttons injected by script.js -->
-        </div>
+      <!-- Scenario -->
+      <section class="scenario">
+        <h2 id="scenarioTitle">Scenario Title</h2>
+        <p id="scenarioDesc">Scenario description appears here.</p>
+
+        <div id="choices" class="choices"></div>
       </section>
 
-      <!-- Right: preview & score -->
-      <aside class="preview" aria-label="Product preview and score">
+      <!-- Preview + Score -->
+      <aside class="preview">
         <figure class="product-visual">
-          <img
-            id="visualImg"
-            src=""
-            alt="Selected Milton product preview"
-            loading="lazy"
-          />
-          <figcaption id="visualCaption" class="visual-caption"></figcaption>
+          <img id="visualImg" src="" alt="Product preview" />
+          <figcaption id="visualCaption"></figcaption>
         </figure>
 
-        <div class="score-box" aria-label="Score panel">
+        <div class="score-box">
           <h3 class="score-label">Freshness Points</h3>
           <div id="points" class="points">0</div>
           <p class="personality">
-            Profile:
-            <span id="ptype">—</span>
+            Profile: <span id="ptype">—</span>
           </p>
 
-          <div class="score-actions">
-            <button id="couponBtn" class="coupon-btn" type="button">
-              Get Coupon
-            </button>
-            <button id="shareBtn" class="ghost-btn" type="button">
-              Share Result
-            </button>
-          </div>
+          <button id="couponBtn" class="coupon-btn">Get Coupon</button>
+          <button id="shareBtn" class="ghost-btn">Share Result</button>
         </div>
       </aside>
+
     </div>
 
-    <!-- Result summary -->
-    <section id="resultCard" class="result hidden" aria-label="Result summary">
+    <!-- Results -->
+    <section id="resultCard" class="result hidden">
       <h3>Your Milton Moments Result</h3>
       <p id="resultSummary"></p>
-      <button id="replayBtn" class="start-btn secondary" type="button">
-        Play Again
-      </button>
+      <button id="replayBtn" class="start-btn secondary">Play Again</button>
     </section>
+
   </section>
 
   <footer class="site-footer">
-    Built for Milton Moments – demo experience. Replace images with official Milton assets
-    before production.
+    Built as a demo for Milton Moments Interactive Experience.
   </footer>
 
   <script src="script.js"></script>
