@@ -1,6 +1,6 @@
-// script.js — FINAL FIXED VERSION
+// script.js — Milton Moments with 6 scenarios & final result card only
 
-// Images — replace with your own official images
+// Image paths — replace with real Milton product images in /images
 const IMAGES = {
   proLunch: "images/pro_lunch.png",
   steelOn: "images/steel_tiffin.png",
@@ -9,67 +9,105 @@ const IMAGES = {
   carafe: "images/carafe.png",
 };
 
-// Scenario definitions
+// Scenarios (6 personas)
 const scenarios = [
   {
+    id: "student",
     title: "Riya – College Student",
     desc: "Riya has long days on campus and needs a fresh, leak-proof lunch with a drink.",
     options: [
-      { name: "Milton Pro Lunch Set", img: IMAGES.proLunch, score: 10 },
+      { name: "Milton Pro Lunch Set (multi-compartment + bottle)", img: IMAGES.proLunch, score: 10 },
       { name: "Thermosteel 500 ml Flask", img: IMAGES.thermosteel500, score: 4 },
-      { name: "Treo Glass Tiffin", img: IMAGES.treoGlass, score: 7 }
-    ]
+      { name: "Treo Glass Tiffin", img: IMAGES.treoGlass, score: 7 },
+    ],
   },
   {
+    id: "teacher",
     title: "Mr. Khanna – School Teacher",
     desc: "He shares snacks and serves chai in the staff room between classes.",
     options: [
       { name: "Large Insulated Steel Tiffin", img: IMAGES.steelOn, score: 8 },
       { name: "Thermosteel Carafe", img: IMAGES.carafe, score: 10 },
-      { name: "Pro Lunch Set", img: IMAGES.proLunch, score: 6 }
-    ]
+      { name: "Pro Lunch Set", img: IMAGES.proLunch, score: 6 },
+    ],
   },
   {
+    id: "business",
     title: "Vikram – Business Traveler",
     desc: "He travels between meetings and needs a professional lunch + hot beverage setup.",
     options: [
       { name: "Executive Pro Lunch Set", img: IMAGES.proLunch, score: 9 },
       { name: "Thermosteel 500 ml Flask", img: IMAGES.thermosteel500, score: 8 },
-      { name: "Insulated Casserole", img: IMAGES.carafe, score: 6 }
-    ]
-  }
+      { name: "Insulated Casserole", img: IMAGES.carafe, score: 6 },
+    ],
+  },
+  {
+    id: "traveler",
+    title: "Sara – Road Trip Traveler",
+    desc: "Weekend drives and picnics; food & drinks should stay fresh and spill-proof.",
+    options: [
+      { name: "Casserole + Thermosteel Carafe combo", img: IMAGES.carafe, score: 10 },
+      { name: "Thermosteel 500 ml Flask", img: IMAGES.thermosteel500, score: 7 },
+      { name: "Treo Glass Tiffin", img: IMAGES.treoGlass, score: 5 },
+    ],
+  },
+  {
+    id: "gym",
+    title: "Aditya – Gym-Goer",
+    desc: "Needs cold water or shakes during workout and a healthy post-workout meal.",
+    options: [
+      { name: "Thermosteel Bottle", img: IMAGES.thermosteel500, score: 9 },
+      { name: "Treo Glass Meal Box", img: IMAGES.treoGlass, score: 7 },
+      { name: "Pro Lunch Set", img: IMAGES.proLunch, score: 5 },
+    ],
+  },
+  {
+    id: "host",
+    title: "Leena – Home Host",
+    desc: "Loves hosting friends and family, serving hot dishes and endless chai.",
+    options: [
+      { name: "Thermosteel Carafe", img: IMAGES.carafe, score: 9 },
+      { name: "Insulated Casserole", img: IMAGES.carafe, score: 10 },
+      { name: "Treo Glass Tiffin", img: IMAGES.treoGlass, score: 5 },
+    ],
+  },
 ];
 
-// STATE
+// State
 let currentIndex = 0;
 let totalScore = 0;
 let isGameOver = false;
 
-// DOM
+// DOM references
 const landing = document.querySelector(".landing");
 const gamePanel = document.getElementById("gamePanel");
+const gameContainer = document.getElementById("gameContainer");
 const preloader = document.getElementById("preloader");
 
 const scenarioTitle = document.getElementById("scenarioTitle");
 const scenarioDesc = document.getElementById("scenarioDesc");
 const choicesEl = document.getElementById("choices");
+
 const visualImg = document.getElementById("visualImg");
 const visualCaption = document.getElementById("visualCaption");
 
 const pointsEl = document.getElementById("points");
 const ptypeEl = document.getElementById("ptype");
 
+// Result card DOM
 const resultCard = document.getElementById("resultCard");
-const resultSummary = document.getElementById("resultSummary");
+const finalScoreEl = document.getElementById("finalScore");
+const finalProfileEl = document.getElementById("finalProfile");
+const resultCopyEl = document.getElementById("resultCopy");
 
+// Buttons
 const startGameBtn = document.getElementById("startGameBtn");
-const replayBtn = document.getElementById("replayBtn");
+const resultPlayAgainBtn = document.getElementById("resultPlayAgain");
 const couponBtn = document.getElementById("couponBtn");
 const shareBtn = document.getElementById("shareBtn");
 
-// SOUNDS
+// SOUND (simple tone)
 function clickSound() {
-  // Soft click tone
   const audio = new AudioContext();
   const osc = audio.createOscillator();
   const gain = audio.createGain();
@@ -81,7 +119,7 @@ function clickSound() {
   osc.stop(audio.currentTime + 0.09);
 }
 
-// SCORE animation
+// Score animation
 function animatePoints(from, to) {
   const start = performance.now();
   const duration = 400;
@@ -100,8 +138,9 @@ function renderScenario(i) {
   scenarioTitle.textContent = s.title;
   scenarioDesc.textContent = s.desc;
 
-  visualImg.src = s.options[0].img;
-  visualCaption.textContent = s.options[0].name;
+  const first = s.options[0];
+  visualImg.src = first.img;
+  visualCaption.textContent = first.name;
 
   choicesEl.innerHTML = "";
 
@@ -114,11 +153,9 @@ function renderScenario(i) {
         <b>${opt.name}</b>
       </div>
     `;
-
     btn.addEventListener("mouseenter", () => updatePreview(opt));
     btn.addEventListener("focus", () => updatePreview(opt));
-
-    btn.addEventListener("click", () => selectOption(opt, btn));
+    btn.addEventListener("click", () => selectOption(opt));
 
     choicesEl.appendChild(btn);
   });
@@ -129,18 +166,16 @@ function updatePreview(opt) {
   visualCaption.textContent = opt.name;
 }
 
-// FINAL FIX – Prevent scoring after last scenario
-function selectOption(opt, btn) {
-  if (isGameOver) return; // ⛔ FIXED: Stop adding score after finish
+// Selecting an option
+function selectOption(opt) {
+  if (isGameOver) return;
 
   clickSound();
 
-  // Add score
-  const prev = totalScore;
+  const old = totalScore;
   totalScore += opt.score;
-  animatePoints(prev, totalScore);
+  animatePoints(old, totalScore);
 
-  // Move to next scenario
   setTimeout(() => {
     if (currentIndex < scenarios.length - 1) {
       currentIndex++;
@@ -151,27 +186,50 @@ function selectOption(opt, btn) {
   }, 400);
 }
 
+// End game – hide questions, show only result card
 function endGame() {
-  isGameOver = true; // 🔥 FIXED
+  isGameOver = true;
 
-  // Disable all choices
-  choicesEl.querySelectorAll("button.choice").forEach((btn) => {
-    btn.disabled = true;
-  });
+  // Hide questions + preview
+  gameContainer.classList.add("hidden");
 
-  // Compute personality
-  let profile = "Quick Fixer";
-  if (totalScore >= 25) profile = "Smart Planner";
+  // Personality thresholds for 6 scenarios (max possible ≈ 60)
+  let profile = "Quick Fixer"; // 0–29
+  if (totalScore >= 50) profile = "Smart Planner";
+  else if (totalScore >= 40) profile = "Freshness Lover";
+  else if (totalScore >= 30) profile = "Practical Chooser";
 
   ptypeEl.textContent = profile;
 
-  resultSummary.textContent =
-    `You scored ${totalScore} Freshness Points.\nYour personality: ${profile}`;
+  finalScoreEl.textContent = totalScore.toString();
+  finalProfileEl.textContent = profile;
+
+  // Marketing copy based on profile
+  let extraCopy = "";
+  switch (profile) {
+    case "Smart Planner":
+      extraCopy =
+        "I plan ahead, keep every meal sorted and rely on Milton to stay ahead of my day — fresh, organised and always ready.";
+      break;
+    case "Freshness Lover":
+      extraCopy =
+        "I love my food just the way it’s meant to be — hot, fresh and flavourful. Milton keeps every bite on point.";
+      break;
+    case "Practical Chooser":
+      extraCopy =
+        "I pick what works best in real life — Milton fits into my routine with the right mix of convenience and freshness.";
+      break;
+    default:
+      extraCopy =
+        "I fix things on the go and trust Milton to keep up — from last-minute lunches to surprise chai breaks.";
+  }
+  resultCopyEl.textContent = extraCopy;
 
   resultCard.classList.remove("hidden");
+  resultCard.classList.add("fade-up");
 }
 
-// Coupon generator
+// Coupon generator (local-only)
 function generateLocalCoupon() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code = "";
@@ -179,28 +237,7 @@ function generateLocalCoupon() {
   return `MILTON-${code}`;
 }
 
-couponBtn.addEventListener("click", () => {
-  if (!isGameOver) return alert("Finish the game first!");
-
-  const coupon = generateLocalCoupon();
-  navigator.clipboard.writeText(coupon);
-  alert(`🎉 Your coupon: ${coupon}\nCopied to clipboard!`);
-});
-
-// Share button
-shareBtn.addEventListener("click", () => {
-  if (!isGameOver) return;
-
-  const text = `I played Milton Moments and scored ${totalScore} points!`;
-  if (navigator.share) {
-    navigator.share({ text });
-  } else {
-    navigator.clipboard.writeText(text);
-    alert("Result copied! You can paste it anywhere.");
-  }
-});
-
-// Start game
+// Button handlers
 startGameBtn.addEventListener("click", () => {
   clickSound();
   preloader.classList.remove("hidden");
@@ -213,31 +250,63 @@ startGameBtn.addEventListener("click", () => {
   }, 800);
 });
 
-// Reset for Replay
+resultPlayAgainBtn.addEventListener("click", () => {
+  clickSound();
+  window.scrollTo(0, 0);
+  resultCard.classList.add("hidden");
+  gamePanel.classList.add("hidden");
+  landing.classList.remove("hidden");
+});
+
+couponBtn.addEventListener("click", () => {
+  if (!isGameOver) return alert("Finish the game first!");
+  const coupon = generateLocalCoupon();
+  navigator.clipboard.writeText(coupon).catch(() => {});
+  alert(`🎉 Your coupon: ${coupon}\n\nIt has been copied to your clipboard.`);
+});
+
+shareBtn.addEventListener("click", () => {
+  if (!isGameOver) return;
+
+  const profile = finalProfileEl.textContent;
+  const score = finalScoreEl.textContent;
+  const shareText = `My Milton Moments Report:\n• Freshness Points: ${score}\n• Smart Lunch Personality: ${profile}\n\n“I pack every day with smart, fresh choices – powered by Milton.”\n#MiltonMoments #SmartLunch #StayFreshWithMilton`;
+
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "My Milton Moments Report",
+        text: shareText,
+        url: window.location.href,
+      })
+      .catch(() => {});
+  } else {
+    navigator.clipboard
+      .writeText(shareText)
+      .then(() => alert("Share text copied! Paste it on your favourite social platform."))
+      .catch(() => alert("Could not copy share text. Please try again."));
+  }
+});
+
+// Reset game for a new run
 function resetGame() {
   totalScore = 0;
   currentIndex = 0;
-  isGameOver = false; // RESET FIX
-
+  isGameOver = false;
   pointsEl.textContent = "0";
   ptypeEl.textContent = "—";
+
+  gameContainer.classList.remove("hidden");
   resultCard.classList.add("hidden");
 
   renderScenario(0);
 }
 
-replayBtn.addEventListener("click", () => {
-  window.scrollTo(0, 0);
-  gamePanel.classList.add("hidden");
-  landing.classList.remove("hidden");
-});
-
-
 // Preload images
-Object.values(IMAGES).forEach(src => {
+Object.values(IMAGES).forEach((src) => {
   const img = new Image();
   img.src = src;
 });
 
-// Initial
+// Initial setup
 renderScenario(0);
